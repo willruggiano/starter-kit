@@ -259,14 +259,30 @@ or installs them automatically if the chosen integration makes that practical.
 
 `nix flake check` is the authoritative validation path.
 
+Validation should be organized into named check categories rather than a flat
+bag of unrelated checks.
+
+## Named check categories
+
+- `state`: validates governed project state artifacts; v1 starts with
+  `TASKS.json` schema validation and can later expand to other state-bearing
+  artifacts such as structured extracts from `STATE.md`
+- `governance`: validates governance requirements over the repository and its
+  state; v1 starts with required canonical artifacts and can later expand to
+  cross-document consistency, design-before-implementation rules, and OPA-backed
+  policy evaluation
+
 ## Required checks
 
 At minimum, the generated template should check:
 
 1. formatting
-2. control-plane schema validity
-3. basic template integrity
-4. any documented task-policy checks that are actually implemented in v1
+2. `state`
+3. `governance`
+4. any additional documented checks that are actually implemented in v1
+
+Future systematic policy verification such as OPA belongs under
+`governance`, not `state`.
 
 There should not be a second, competing validation contract based on handwritten
 shell scripts.
@@ -298,6 +314,8 @@ validated:
 
 The earlier draft overreached here. V1 should only define and validate what it
 actually uses.
+
+The `state` check category should own validation of these artifacts.
 
 ## TASKS.json requirements
 
@@ -356,6 +374,9 @@ The default template should include a coherent minimal document set such as:
 If task packet Markdown files are included, they should be treated as
 human-readable companions to the machine-validated task registry, not as a
 second competing source of truth for structured fields.
+
+The `governance` check category should own requirements about the presence and
+consistency of canonical artifacts.
 
 ---
 
@@ -531,26 +552,25 @@ Additional variants should only be added when they are clearly justified.
 
 # 22. Recommended implementation phases
 
-## Phase 1: source flake baseline
+## Phase 1: source flake baseline (DONE)
 
 Implement:
 
 - source repo `flake.nix`
 - source repo formatter
 - source repo checks
-- source repo template export
+- source repo dev shell
 
-## Phase 2: default template baseline
+## Phase 2: dogfood repo baseline (DONE)
 
 Implement:
 
-- self-contained template flake
-- canonical docs
+- canonical docs in the source repo
 - `TASKS.json`
 - `schemas/TASKS.schema.json`
-- template README
+- `state` and `governance` checks in the source repo
 
-## Phase 3: formatting and hooks
+## Phase 3: formatting and hooks (DONE)
 
 Implement:
 
@@ -567,11 +587,22 @@ Implement:
 - initial agent runtime packaging
 - initial sandbox integration using `jail.nix`
 
-## Phase 5: hardening
+## Phase 5: template export
+
+Implement only after the dogfood path is coherent and _using_ the agent runtime
+packaging/sandbox integration from Phase 4:
+
+- self-contained template flake
+- exported `templates.default`
+- template README
+- reuse of the dogfooded state and governance model
+
+## Phase 6: hardening
 
 Implement only if the baseline is already coherent:
 
-- stronger task-policy checks
+- stronger `governance` policy checks
+- optional OPA-based policy evaluation under `governance`
 - optional worktree helper
 - optional additional template variants
 

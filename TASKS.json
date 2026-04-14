@@ -1,0 +1,75 @@
+{
+  "$schema": "./schemas/TASKS.schema.json",
+  "tasks": [
+    {
+      "id": "T-001",
+      "title": "Scaffold the source flake baseline",
+      "status": "done",
+      "dependencies": [],
+      "allowed_paths": [
+        ".envrc",
+        ".gitignore",
+        "flake.nix",
+        "flake.lock",
+        "nix/"
+      ],
+      "acceptance_criteria": [
+        "The source repository has a working flake.",
+        "Formatting and pre-commit checks are wired through Nix.",
+        "nix flake check succeeds on the source repository."
+      ],
+      "verification": ["nix flake check"],
+      "owner": "willruggiano",
+      "notes": ["This was completed before template export work began."]
+    },
+    {
+      "id": "T-002",
+      "title": "Dogfood the instantiated-repo control plane in the source repo",
+      "status": "in_progress",
+      "dependencies": ["T-001"],
+      "allowed_paths": [
+        "README.md",
+        "PRODUCT_BRIEF.md",
+        "ARCHITECTURE.md",
+        "DECISIONS.md",
+        "CONSTRAINTS.md",
+        "STATE.md",
+        "TASKS.json",
+        "schemas/",
+        "nix/"
+      ],
+      "acceptance_criteria": [
+        "The repo contains the canonical docs required by the current design.",
+        "TASKS.json validates against a real schema.",
+        "nix flake check validates the control plane and basic repo integrity."
+      ],
+      "verification": ["nix flake check"],
+      "owner": "willruggiano",
+      "notes": [
+        "This task intentionally dogfoods the generated-repo model in-source."
+      ]
+    },
+    {
+      "id": "T-003",
+      "title": "Export the first default template after the dogfood pass",
+      "status": "planned",
+      "dependencies": ["T-002"],
+      "allowed_paths": [
+        "flake.nix",
+        "flake.lock",
+        "nix/",
+        "templates/",
+        "README.md",
+        "DESIGN.md"
+      ],
+      "acceptance_criteria": [
+        "The source flake exposes templates.default.",
+        "nix flake init -t .#default produces a coherent starter repo.",
+        "The exported template reflects the dogfooded repo structure rather than an invented one."
+      ],
+      "verification": ["nix flake show", "nix flake init -t .#default"],
+      "owner": "willruggiano",
+      "notes": ["This remains blocked on the dogfood pass feeling credible."]
+    }
+  ]
+}
