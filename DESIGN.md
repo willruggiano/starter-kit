@@ -579,7 +579,7 @@ Implement:
 - working `nix fmt`
 - working `nix flake check`
 
-## Phase 4: helper apps and runtime
+## Phase 4: helper apps and runtime (DONE)
 
 Implement:
 

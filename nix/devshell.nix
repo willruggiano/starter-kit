@@ -1,5 +1,6 @@
 {
   inputs,
+  perSystem,
   pkgs,
   ...
 }: let
@@ -7,7 +8,10 @@
 in
   pkgs.mkShell {
     env = {};
-    packages = [];
+    packages = [
+      perSystem.self.formatter
+      perSystem.self.claude-code
+    ];
     shellHook = ''
       ${pre-commit.shellHook}
     '';

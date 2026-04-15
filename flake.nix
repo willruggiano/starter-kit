@@ -7,6 +7,13 @@
       url = "github:numtide/blueprint";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    jail = {
+      url = "sourcehut:~alexdavid/jail.nix";
+    };
     treefmt = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
