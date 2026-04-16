@@ -16,7 +16,7 @@
       with cs; [
         (add-pkg-deps [cfg.settings.package])
         (add-pkg-deps cfg.settings.enabledPackages)
-        (ro-bind cfg.settings.configPath cfg.settings.configFile)
+        (readonly cfg.settings.configFile)
       ];
 
     pre-commit.settings = {
