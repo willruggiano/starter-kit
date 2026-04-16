@@ -1,66 +1,22 @@
-# starter-kit
+# Nix-native starter kit source flake
 
-This repository is the source flake for a Nix-native starter kit for solo
-development with coding agents.
+Nix is just absolutely fantastic for corralling coding agents.
 
-## Using the template
+This repository is a work-in-progress template that consolidates my personal
+experiences setting up Nix-based development environments that "play nice" with
+coding agents.
 
-Inspect available templates:
+## Why even care?
 
-```bash
-nix flake show github:willruggiano/starter-kit
-```
+Coding agents work best if you let them rip in YOLO mode.
+They make mistakes, they adjust, they iterate. Eventually (usually) they produce
+something that resembles code.
 
-Create a new project:
+Of course, you can't just rip in YOLO mode. I commend the efforts of the
+claude-codes, codexes, and others of the world for valiantly trying to solve the
+(admittedly hard) problem of sandbox isolation.
+That being said, sorry guys. I don't trust you. Not one bit.
 
-```bash
-mkdir my-project && cd my-project
-nix flake init -t github:willruggiano/starter-kit#default
-git init && git add -A
-```
-
-The generated repository is immediately usable:
-
-```bash
-nix develop     # enter the development environment
-nix fmt         # format all files
-nix flake check # run all validation checks
-nix run .#claude-code # run the sandboxed coding agent
-```
-
-## What the template provides
-
-- Nix-defined development environment with `treefmt-nix` and `git-hooks.nix`
-- Machine-validated `TASKS.json` task registry
-- Governance checks for required canonical artifacts
-- Sandboxed `claude-code` agent runner via `jail.nix`
-- Placeholder project docs ready to fill in
-
-## Requirements
-
-This starter kit requires Nix with flakes enabled. It does not support non-Nix
-environments.
-
-## Working on this repository
-
-This source repo dogfoods the same control-plane model that the template
-exports:
-
-```bash
-nix develop
-nix fmt
-nix flake check
-```
-
-`nix flake check` is the authoritative validation path.
-
-## Canonical docs
-
-- `README.md`
-- `PRODUCT_BRIEF.md`
-- `ARCHITECTURE.md`
-- `DECISIONS.md`
-- `CONSTRAINTS.md`
-- `STATE.md`
-- `DESIGN.md`
-- `TASKS.json`
+That's where this project comes in.
+The goal: use Nix to do what Nix does best and create a deterministic,
+systematically isolated jail for my coding agents. YOLO baby.
