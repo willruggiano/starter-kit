@@ -8,8 +8,8 @@
    entrypoint. There is no competing shell-script validation path.
 3. **Formatting and hooks are Nix-defined.** `treefmt-nix` owns formatting.
    `git-hooks.nix` owns pre-commit hooks.
-4. **No handwritten shell-script control plane.** Helper operations are Nix apps,
-   not loose scripts.
+4. **No handwritten shell-script control plane.** Helper operations are Nix
+   apps, not loose scripts.
 
 ## Quality constraints
 

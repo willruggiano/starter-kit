@@ -5,33 +5,36 @@ defined in Nix.
 
 ## Flake outputs
 
-| Output                 | Purpose                        |
-| ---------------------- | ------------------------------ |
-| `devShells.default`    | Development environment        |
-| `formatter`            | treefmt-nix formatting wrapper |
-| `checks.pre-commit`    | Git hook validation            |
-| `checks.state`         | TASKS.json schema validation   |
-| `checks.governance`    | Required artifact presence     |
-| `packages.claude-code` | Sandboxed coding agent         |
-| `apps.claude-code`     | Agent execution entrypoint     |
+| Output                 | Purpose                                                   |
+| ---------------------- | --------------------------------------------------------- |
+| `devShells.default`    | Development environment                                   |
+| `formatter`            | treefmt-nix formatting wrapper                            |
+| `checks.pre-commit`    | Pre-commit hooks (formatting, linting, schema validation) |
+| `packages.claude-code` | Sandboxed coding agent                                    |
+| `apps.claude-code`     | Agent execution entrypoint                                |
 
-## Validation categories
+## Validation
 
-- **state** — validates governed project state artifacts (TASKS.json schema)
-- **governance** — validates repository integrity (required artifacts exist)
+`nix flake check` runs pre-commit hooks that cover:
+
+- **formatting** — treefmt (prettier, alejandra, ruff-format, shfmt)
+- **linting** — deadnix, statix, actionlint
+- **schema validation** — TASKS.json validated against
+  `schemas/TASKS.schema.json`
 
 ## Nix module layout
 
 ```text
 nix/
-├── lib/default.nix                   # Shared helpers (mkJailed)
+├── jailed.nix                        # Jail module (sandbox combinators)
 ├── formatter.nix                     # treefmt-nix configuration
 ├── devshell.nix                      # Development shell
 ├── checks/
-│   ├── pre-commit.nix                # git-hooks.nix integration
-│   ├── state.nix + state.py          # TASKS.json validation
-│   └── governance.nix + governance.sh # Required artifacts
-└── packages/claude-code/default.nix  # Sandboxed agent
+│   ├── default.nix                   # Check module entry
+│   └── pre-commit/default.nix        # git-hooks.nix integration + schema checks
+└── packages/
+    ├── default.nix                   # Package module entry
+    └── claude-code/default.nix       # Sandboxed agent
 ```
 
 ## Sandbox

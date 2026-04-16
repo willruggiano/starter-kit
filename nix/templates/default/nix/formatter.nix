@@ -16,11 +16,15 @@
       ];
 
     packages.treefmt = config.treefmt.build.wrapper;
+
     treefmt = {
       projectRootFile = "flake.nix";
       programs = {
         # Json and Markdown
-        prettier.enable = true;
+        prettier = {
+          enable = true;
+          settings.proseWrap = "always";
+        };
         # Nix
         alejandra.enable = true;
         # Python
@@ -29,10 +33,7 @@
         shfmt.enable = true;
       };
       settings.formatter = {
-        prettier = {
-          includes = lib.mkForce ["*.json" "*.md"];
-          prettier.proseWrap = "always";
-        };
+        prettier.includes = lib.mkForce ["*.json" "*.md"];
       };
     };
   };

@@ -8,8 +8,8 @@ development and coding-agent execution.
 ## Problem
 
 Typical repository templates treat agent workflow, validation, and environment
-setup as optional layers. This starter kit wants those behaviors to be first
-class and reproducible.
+setup as optional layers. This starter kit wants those behaviors to be
+first-class and reproducible.
 
 ## Intended user
 

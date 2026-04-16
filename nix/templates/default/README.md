@@ -28,13 +28,13 @@ nix run .#claude-code
 
 ## What is enforced
 
-`nix flake check` is the authoritative validation entrypoint. It runs:
+`nix flake check` is the authoritative validation entrypoint. It runs pre-commit
+hooks that cover:
 
-- **formatting** — `treefmt-nix` with prettier, alejandra, ruff-format, shfmt
-- **pre-commit hooks** — deadnix, nil, statix, ruff, shellcheck, actionlint
-- **state validation** — `TASKS.json` is validated against
+- **formatting** — treefmt-nix with prettier, alejandra, ruff-format, shfmt
+- **linting** — deadnix, statix, actionlint
+- **schema validation** — `TASKS.json` is validated against
   `schemas/TASKS.schema.json`
-- **governance** — required canonical artifacts must exist
 
 ## Canonical documents
 

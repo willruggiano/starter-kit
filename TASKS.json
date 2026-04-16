@@ -54,14 +54,7 @@
       "title": "Export the first default template after the dogfood pass",
       "status": "done",
       "dependencies": ["T-002"],
-      "allowed_paths": [
-        "flake.nix",
-        "flake.lock",
-        "nix/",
-        "templates/",
-        "README.md",
-        "DESIGN.md"
-      ],
+      "allowed_paths": ["flake.nix", "flake.lock", "nix/", "README.md"],
       "acceptance_criteria": [
         "The source flake exposes templates.default.",
         "nix flake init -t .#default produces a coherent starter repo.",

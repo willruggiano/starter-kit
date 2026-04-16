@@ -11,7 +11,7 @@ The repository has two roles:
 
 The source flake is built on:
 
-- `blueprint` for source-repo module auto-discovery
+- `flake-parts` for modular flake composition
 - `treefmt-nix` for formatting
 - `git-hooks.nix` for hook generation
 - `llm-agents.nix` for the coding agent runtime
@@ -25,24 +25,18 @@ The primary operational entrypoints are:
 
 ## Template architecture
 
-The `default` template is a self-contained flake under `templates/default/`. It
-does not use `blueprint` — it uses a standard direct flake with
-`nixpkgs.lib.genAttrs` for system iteration.
+The `default` template is a self-contained flake under `nix/templates/default/`.
+It uses `flake-parts` with explicit module imports rather than auto-discovery.
 
 The template exports:
 
-| Output                 | Purpose                      |
-| ---------------------- | ---------------------------- |
-| `devShells.default`    | Development environment      |
-| `formatter`            | treefmt-nix wrapper          |
-| `checks.pre-commit`    | Git hook validation          |
-| `checks.state`         | TASKS.json schema validation |
-| `checks.governance`    | Required artifact presence   |
-| `packages.claude-code` | Sandboxed coding agent       |
-| `apps.claude-code`     | Agent execution entrypoint   |
-
-The template's Nix modules mirror the source repo's modules but are adapted for
-a standard flake argument style rather than blueprint's module injection.
+| Output                 | Purpose                                                   |
+| ---------------------- | --------------------------------------------------------- |
+| `devShells.default`    | Development environment                                   |
+| `formatter`            | treefmt-nix wrapper                                       |
+| `checks.pre-commit`    | Pre-commit hooks (formatting, linting, schema validation) |
+| `packages.claude-code` | Sandboxed coding agent                                    |
+| `apps.claude-code`     | Agent execution entrypoint                                |
 
 ## Control plane
 
@@ -54,11 +48,10 @@ The control plane is intentionally narrow:
 
 ## Validation
 
-Validation is Nix-defined and organized into named categories:
+Validation is Nix-defined and runs through `nix flake check`:
 
-- **state** — validates governed project state artifacts (TASKS.json schema)
-- **governance** — validates repository integrity (required artifacts exist)
-- **pre-commit** — formatting and linting hooks
+- **pre-commit** — formatting (treefmt), linting (deadnix, statix, actionlint),
+  and schema validation (TASKS.json against its JSON Schema)
 
 ## Agent sandbox
 
