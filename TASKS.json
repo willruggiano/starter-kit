@@ -52,7 +52,7 @@
     {
       "id": "T-003",
       "title": "Export the first default template after the dogfood pass",
-      "status": "in_progress",
+      "status": "done",
       "dependencies": ["T-002"],
       "allowed_paths": [
         "flake.nix",
