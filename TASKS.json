@@ -25,7 +25,7 @@
     {
       "id": "T-002",
       "title": "Dogfood the instantiated-repo control plane in the source repo",
-      "status": "in_progress",
+      "status": "done",
       "dependencies": ["T-001"],
       "allowed_paths": [
         "README.md",
@@ -52,7 +52,7 @@
     {
       "id": "T-003",
       "title": "Export the first default template after the dogfood pass",
-      "status": "planned",
+      "status": "in_progress",
       "dependencies": ["T-002"],
       "allowed_paths": [
         "flake.nix",
@@ -69,7 +69,9 @@
       ],
       "verification": ["nix flake show", "nix flake init -t .#default"],
       "owner": "willruggiano",
-      "notes": ["This remains blocked on the dogfood pass feeling credible."]
+      "notes": [
+        "Template is self-contained with its own flake.nix (no blueprint dependency)."
+      ]
     }
   ]
 }

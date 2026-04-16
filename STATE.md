@@ -2,26 +2,27 @@
 
 ## Current status
 
-The source flake baseline exists and validates.
-
-The repository is now dogfooding the instantiated-repo control plane directly
-in-source before any template export is frozen.
+The source flake baseline exists and validates. The dogfood pass is complete.
+The `default` template is exported and can be instantiated with
+`nix flake init -t .#default`.
 
 ## Completed
 
 - source flake scaffold
 - `treefmt-nix` formatter wiring
 - `git-hooks.nix` pre-commit wiring
+- canonical repo docs
+- typed `TASKS.json` with schema validation
+- Nix-native control-plane checks (state, governance)
+- agent runtime packaging (`claude-code` with `jail.nix` sandbox)
+- exported `default` template
 
 ## In progress
 
-- canonical repo docs
-- typed `TASKS.json`
-- Nix-native control-plane checks
+- end-to-end template verification
 
 ## Deferred
 
-- exported `default` template
-- helper apps
-- agent runtime packaging
-- sandbox integration
+- stronger `governance` policy checks (OPA)
+- optional worktree helper
+- additional template variants

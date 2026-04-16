@@ -1,18 +1,18 @@
 {
-  flake,
-  perSystem,
   pkgs,
-  ...
+  lib,
+  formatter,
+  agents-claude-code,
 }: let
-  pkg = flake.lib.mkJailed {
+  pkg = lib.mkJailed {
     inherit pkgs;
-    package = perSystem.agents.claude-code;
+    package = agents-claude-code;
     name = "claude";
     replyTo = "noreply@anthropic.com";
     additionalCombinators = cs:
       with cs; [
         (add-pkg-deps [
-          perSystem.self.formatter
+          formatter
           pkgs.sox
         ])
         (readwrite (noescape "~/.claude"))
@@ -29,5 +29,5 @@
 in
   pkg
   // {
-    unwrapped = perSystem.agents.claude-code;
+    unwrapped = agents-claude-code;
   }

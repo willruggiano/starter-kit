@@ -1,0 +1,22 @@
+{
+  "$schema": "./schemas/TASKS.schema.json",
+  "tasks": [
+    {
+      "id": "T-001",
+      "title": "Set up project",
+      "status": "planned",
+      "allowed_paths": [
+        "README.md",
+        "PRODUCT_BRIEF.md",
+        "ARCHITECTURE.md",
+        "DECISIONS.md",
+        "DESIGN.md",
+        "STATE.md"
+      ],
+      "acceptance_criteria": [
+        "Project docs reflect the actual project scope and goals"
+      ],
+      "verification": ["nix flake check"]
+    }
+  ]
+}

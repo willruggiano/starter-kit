@@ -3,13 +3,48 @@
 This repository is the source flake for a Nix-native starter kit for solo
 development with coding agents.
 
-The repo is currently dogfooding the same control-plane artifacts that the
-future exported template will eventually ship. The template export remains
-deferred until the workflow feels coherent in this repository itself.
+## Using the template
 
-## Current workflow
+Inspect available templates:
 
-Use the source repo directly with:
+```bash
+nix flake show github:willruggiano/starter-kit
+```
+
+Create a new project:
+
+```bash
+mkdir my-project && cd my-project
+nix flake init -t github:willruggiano/starter-kit#default
+git init && git add -A
+```
+
+The generated repository is immediately usable:
+
+```bash
+nix develop     # enter the development environment
+nix fmt         # format all files
+nix flake check # run all validation checks
+nix run .#claude-code # run the sandboxed coding agent
+```
+
+## What the template provides
+
+- Nix-defined development environment with `treefmt-nix` and `git-hooks.nix`
+- Machine-validated `TASKS.json` task registry
+- Governance checks for required canonical artifacts
+- Sandboxed `claude-code` agent runner via `jail.nix`
+- Placeholder project docs ready to fill in
+
+## Requirements
+
+This starter kit requires Nix with flakes enabled. It does not support non-Nix
+environments.
+
+## Working on this repository
+
+This source repo dogfoods the same control-plane model that the template
+exports:
 
 ```bash
 nix develop
@@ -19,20 +54,7 @@ nix flake check
 
 `nix flake check` is the authoritative validation path.
 
-## Current scope
-
-The repository currently contains:
-
-- the source flake and source-repo Nix wiring
-- canonical project docs
-- a machine-validated `TASKS.json`
-- Nix-defined checks for control-plane validation and repo integrity
-
-It does not yet export a `default` starter template.
-
 ## Canonical docs
-
-The current canonical docs are:
 
 - `README.md`
 - `PRODUCT_BRIEF.md`
@@ -40,11 +62,5 @@ The current canonical docs are:
 - `DECISIONS.md`
 - `CONSTRAINTS.md`
 - `STATE.md`
-- `TASKS.json`
 - `DESIGN.md`
-
-## Near-term direction
-
-1. Dogfood the instantiated-repo workflow in this source repo.
-2. Tighten the control plane and validation path.
-3. Export a `default` template only after the in-repo workflow is credible.
+- `TASKS.json`

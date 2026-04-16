@@ -2,18 +2,20 @@
 
 ## Overview
 
-The repository currently has two roles:
+The repository has two roles:
 
-1. source flake for the future starter-kit templates
-2. dogfooded instance of the intended generated-repo workflow
+1. source flake that publishes starter-kit templates
+2. dogfooded instance of the generated-repo workflow
 
 ## Source flake
 
 The source flake is built on:
 
-- `blueprint` for source-repo structure
+- `blueprint` for source-repo module auto-discovery
 - `treefmt-nix` for formatting
 - `git-hooks.nix` for hook generation
+- `llm-agents.nix` for the coding agent runtime
+- `jail.nix` for agent sandboxing
 
 The primary operational entrypoints are:
 
@@ -21,9 +23,30 @@ The primary operational entrypoints are:
 - `nix fmt`
 - `nix flake check`
 
+## Template architecture
+
+The `default` template is a self-contained flake under `templates/default/`. It
+does not use `blueprint` — it uses a standard direct flake with
+`nixpkgs.lib.genAttrs` for system iteration.
+
+The template exports:
+
+| Output                 | Purpose                      |
+| ---------------------- | ---------------------------- |
+| `devShells.default`    | Development environment      |
+| `formatter`            | treefmt-nix wrapper          |
+| `checks.pre-commit`    | Git hook validation          |
+| `checks.state`         | TASKS.json schema validation |
+| `checks.governance`    | Required artifact presence   |
+| `packages.claude-code` | Sandboxed coding agent       |
+| `apps.claude-code`     | Agent execution entrypoint   |
+
+The template's Nix modules mirror the source repo's modules but are adapted for
+a standard flake argument style rather than blueprint's module injection.
+
 ## Control plane
 
-The current dogfooded control plane is intentionally narrow:
+The control plane is intentionally narrow:
 
 - canonical Markdown docs for durable project memory
 - `TASKS.json` for typed task metadata
@@ -31,19 +54,15 @@ The current dogfooded control plane is intentionally narrow:
 
 ## Validation
 
-Validation is Nix-defined and currently includes:
+Validation is Nix-defined and organized into named categories:
 
-- formatter checks
-- pre-commit checks
-- control-plane schema validation
-- repo integrity checks for required artifacts
+- **state** — validates governed project state artifacts (TASKS.json schema)
+- **governance** — validates repository integrity (required artifacts exist)
+- **pre-commit** — formatting and linting hooks
 
-## Deferred architecture
+## Agent sandbox
 
-The following are intentionally deferred until the dogfooded baseline feels
-stable:
-
-- exported flake templates
-- helper apps such as `task-context`
-- agent runtime packaging
-- sandbox integration
+The coding agent runs inside a `jail.nix` sandbox defined in
+`nix/packages/claude-code/default.nix`. The sandbox provides controlled
+filesystem access and standard development tooling. It does not claim VM-level
+isolation.
