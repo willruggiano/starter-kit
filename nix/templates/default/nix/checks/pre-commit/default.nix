@@ -10,6 +10,8 @@
   }: let
     cfg = config.pre-commit;
   in {
+    devshells.default.devshell.startup.install-git-hooks.text = config.pre-commit.shellHook;
+
     jail.additionalCombinators = cs:
       with cs; [
         (add-pkg-deps [cfg.settings.package])
@@ -26,11 +28,6 @@
         };
         # GitHub Actions
         actionlint.enable = true;
-        # Json + Markdown
-        prettier = {
-          enable = true;
-          types_or = ["json" "markdown"];
-        };
         # Nix
         deadnix.enable = true;
         statix.enable = true;

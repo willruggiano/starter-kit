@@ -5,6 +5,8 @@
     pkgs,
     ...
   }: {
+    devshells.default.packages = [config.packages.claude-code];
+
     jail = {
       git.user.email = "noreply@anthropic.com";
       git.user.name = config.packages.claude-code-unwrapped.name;

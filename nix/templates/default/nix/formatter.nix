@@ -8,7 +8,9 @@
     lib,
     ...
   }: {
-    jail.programs.claude.additionalCombinators = cs:
+    devshells.default.packages = [config.packages.treefmt];
+
+    jail.additionalCombinators = cs:
       with cs; [
         (add-pkg-deps [config.packages.treefmt])
       ];
@@ -29,7 +31,7 @@
       settings.formatter = {
         prettier = {
           includes = lib.mkForce ["*.json" "*.md"];
-          proseWrap = "always";
+          prettier.proseWrap = "always";
         };
       };
     };
