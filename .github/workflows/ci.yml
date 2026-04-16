@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: cachix/install-nix-action@v31
+      - name: nix flake check
+        run: nix flake check
+      - name: Instantiate and check template
+        run: |
+          template_dir="$(mktemp -d)"
+          cd "$template_dir"
+          git init
+          nix flake init -t "path:$GITHUB_WORKSPACE"
+          git add .
+          nix flake check
+
+  test:
+    needs: [check]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: cachix/install-nix-action@v31
+      - name: Instantiate and check template
+        run: |
+          template_dir="$(mktemp -d)"
+          cd "$template_dir"
+          git init
+          nix flake init -t "path:$GITHUB_WORKSPACE"
+          git add .
+          nix flake check
