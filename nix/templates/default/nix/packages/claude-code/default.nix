@@ -1,19 +1,18 @@
-{inputs, ...}: {
+{
   perSystem = {
     config,
     inputs',
     pkgs,
-    system,
     ...
   }: {
     jail = {
       git.user.email = "noreply@anthropic.com";
+      git.user.name = config.packages.claude-code-unwrapped.name;
 
       programs.claude = {
-        package = inputs.agents.packages.${system}.claude-code;
+        package = config.packages.claude-code-unwrapped;
         additionalCombinators = cs:
           with cs; [
-            gui
             (add-pkg-deps [
               pkgs.sox
             ])
