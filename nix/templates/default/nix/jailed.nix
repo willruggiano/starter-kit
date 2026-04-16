@@ -11,7 +11,8 @@
   }: let
     cfg = config.jail;
 
-    gitconfig = lib.generators.toGitINI cfg.git;
+    gitconfigFor = programCfg:
+      lib.generators.toGitINI (lib.recursiveUpdate cfg.git programCfg.git);
 
     combinatorsType = lib.mkOptionType {
       name = "combinators";
@@ -29,6 +30,12 @@
         package = lib.mkOption {
           type = lib.types.package;
           description = "The unwrapped package to jail.";
+        };
+
+        git = lib.mkOption {
+          type = lib.types.attrs;
+          default = {};
+          description = "Per-program gitconfig overrides, merged with jail.git.";
         };
 
         additionalCombinators = lib.mkOption {
@@ -83,12 +90,14 @@
                 wget
                 which
               ]))
-              (write-text "/etc/gitconfig" gitconfig)
+              (write-text "/etc/gitconfig" (gitconfigFor config))
               (set-env "SHELL" (pkgs.lib.getExe pkgs.bash))
             ];
         };
+        combinators = cs:
+          (cfg.additionalCombinators cs) ++ (config.additionalCombinators cs);
       in
-        jail name config.package config.additionalCombinators;
+        jail name config.package combinators;
     });
   in {
     options.jail = {
@@ -96,6 +105,12 @@
         type = lib.types.attrs;
         default = {};
         description = "Gitconfig attrset, passed directly to lib.generators.toGitINI.";
+      };
+
+      additionalCombinators = lib.mkOption {
+        type = combinatorsType;
+        default = _: [];
+        description = "Additional jail.nix combinators applied to all programs.";
       };
 
       programs = lib.mkOption {

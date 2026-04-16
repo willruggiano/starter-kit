@@ -1,6 +1,7 @@
 {inputs, ...}: {
   perSystem = {
     config,
+    pkgs,
     system,
     ...
   }: {
@@ -22,7 +23,28 @@
         ruff.enable = true;
         # Shell
         shellcheck.enable = true;
+        # Governance
+        governance = {
+          enable = true;
+          entry = "${pkgs.bash}/bin/bash ${./check-governance.sh} .";
+          pass_filenames = false;
+          language = "system";
+        };
+        # State validity
+        state = let
+          python = pkgs.python3.withPackages (ps: [ps.jsonschema]);
+        in {
+          enable = true;
+          entry = "${python}/bin/python ${./check-state.py} .";
+          pass_filenames = false;
+          language = "system";
+        };
       };
     };
+
+    jail.additionalCombinators = cs:
+      with cs; [
+        (add-pkg-deps [pkgs.pre-commit])
+      ];
   };
 }

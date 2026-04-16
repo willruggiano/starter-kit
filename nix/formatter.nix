@@ -8,12 +8,13 @@
     lib,
     ...
   }: {
-    jail.programs.claude.additionalCombinators = cs:
+    jail.additionalCombinators = cs:
       with cs; [
         (add-pkg-deps [config.packages.treefmt])
       ];
 
     packages.treefmt = config.treefmt.build.wrapper;
+
     treefmt = {
       projectRootFile = "flake.nix";
       programs = {
