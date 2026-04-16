@@ -1,5 +1,5 @@
 {
-  description = "Nix-native starter kit source flake";
+  description = "Nix-native agentic development starter kit";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixpkgs-unstable";
