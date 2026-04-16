@@ -1,12 +1,12 @@
-{jail}: {
-  mkJailed = {
+{inputs, ...}: {
+  flake.lib.mkJailed = {
     pkgs,
     package,
     replyTo,
     additionalCombinators,
     name ? package.pname,
   }: let
-    j = jail.lib.extend {
+    jail = inputs.jail.lib.extend {
       inherit pkgs;
       basePermissions = cs:
         with cs; [
@@ -51,5 +51,5 @@
         ];
     };
   in
-    j name package additionalCombinators;
+    jail name package additionalCombinators;
 }

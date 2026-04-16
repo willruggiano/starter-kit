@@ -1,0 +1,6 @@
+{
+  imports = [
+    ./ci
+    ./pre-commit
+  ];
+}

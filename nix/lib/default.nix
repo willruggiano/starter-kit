@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  mkJailed = {
+  flake.lib.mkJailed = {
     pkgs,
     package,
     replyTo,
@@ -14,7 +14,6 @@
           bind-nix-store-runtime-closure
           fake-passwd
           gpu
-          gui
           mount-cwd
           network
           open-urls-in-browser

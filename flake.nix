@@ -3,9 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixpkgs-unstable";
-    blueprint = {
-      url = "github:numtide/blueprint";
-      inputs.nixpkgs.follows = "nixpkgs";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     agents = {
       url = "github:numtide/llm-agents.nix";
@@ -25,9 +25,20 @@
   };
 
   outputs = inputs:
-    inputs.blueprint {
-      inherit inputs;
-      prefix = "nix";
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       systems = ["x86_64-linux"];
+
+      imports = [
+        ./nix/lib
+        ./nix/formatter.nix
+        ./nix/packages
+        ./nix/checks
+        ./nix/devshell.nix
+      ];
+
+      flake.templates.default = {
+        description = "Nix-native agentic development starter kit";
+        path = ./nix/templates/default;
+      };
     };
 }
