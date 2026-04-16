@@ -1,0 +1,21 @@
+name: Test template
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: cachix/install-nix-action@v31
+      - name: Instantiate template and run flake check
+        run: |
+          template_dir="$(mktemp -d)"
+          cd "$template_dir"
+          git init
+          nix flake init -t "path:$GITHUB_WORKSPACE"
+          git add .
+          nix flake check
