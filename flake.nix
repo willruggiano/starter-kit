@@ -29,7 +29,7 @@
       systems = ["x86_64-linux"];
 
       imports = [
-        ./nix/lib
+        ./nix/jailed.nix
         ./nix/formatter.nix
         ./nix/packages
         ./nix/checks

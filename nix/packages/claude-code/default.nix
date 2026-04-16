@@ -1,10 +1,4 @@
-{
-  config,
-  inputs,
-  ...
-}: let
-  inherit (config.flake) lib;
-in {
+{inputs, ...}: {
   perSystem = {
     config,
     inputs',
@@ -12,6 +6,29 @@ in {
     system,
     ...
   }: {
+    jail = {
+      git.user.email = "noreply@anthropic.com";
+
+      programs.claude = {
+        package = inputs.agents.packages.${system}.claude-code;
+        additionalCombinators = cs:
+          with cs; [
+            (add-pkg-deps [
+              pkgs.sox
+            ])
+            (readwrite (noescape "~/.claude"))
+            (readwrite (noescape "~/.claude.json"))
+            (set-env "CLAUDE_CODE_EFFORT_LEVEL" "max")
+            (set-env "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS" "1")
+            (wrap-entry (entry: ''
+              # The program is already sandboxed. For this reason we opt to
+              # start in this mode to facilitate rapid iteration.
+              ${entry} --allow-dangerously-skip-permissions --dangerously-skip-permissions
+            ''))
+          ];
+      };
+    };
+
     apps.claude-code = {
       type = "app";
       program = pkgs.lib.getExe config.packages.claude-code;
@@ -20,28 +37,7 @@ in {
 
     packages = {
       claude-code = let
-        drv = lib.mkJailed {
-          inherit pkgs;
-          package = inputs.agents.packages.${system}.claude-code;
-          name = "claude";
-          replyTo = "noreply@anthropic.com";
-          additionalCombinators = cs:
-            with cs; [
-              (add-pkg-deps [
-                config.packages.treefmt
-                pkgs.sox
-              ])
-              (readwrite (noescape "~/.claude"))
-              (readwrite (noescape "~/.claude.json"))
-              (set-env "CLAUDE_CODE_EFFORT_LEVEL" "max")
-              (set-env "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS" "1")
-              (wrap-entry (entry: ''
-                # The program is already sandboxed. For this reason we opt to
-                # start in this mode to facilitate rapid iteration.
-                ${entry} --allow-dangerously-skip-permissions --dangerously-skip-permissions
-              ''))
-            ];
-        };
+        drv = config.jail.programs.claude.build.wrapped;
       in
         drv
         // {
