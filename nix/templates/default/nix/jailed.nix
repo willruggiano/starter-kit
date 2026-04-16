@@ -63,6 +63,7 @@
               mount-cwd
               network
               open-urls-in-browser
+              readonly-runtime-args
               time-zone
               (add-pkg-deps (with pkgs; [
                 bash
