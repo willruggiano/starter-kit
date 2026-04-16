@@ -11,7 +11,7 @@
         config.packages.treefmt
       ];
       shellHook = ''
-        ${config.checks.pre-commit.shellHook}
+        ${config.pre-commit.shellHook}
       '';
     };
   };

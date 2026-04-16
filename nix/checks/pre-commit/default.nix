@@ -1,12 +1,19 @@
 {inputs, ...}: {
+  imports = [
+    inputs.git-hooks.flakeModule
+  ];
   perSystem = {
     config,
     pkgs,
-    system,
     ...
   }: {
-    checks.pre-commit = inputs.git-hooks.lib.${system}.run {
-      src = inputs.self;
+    jail.additionalCombinators = cs:
+      with cs; [
+        (add-pkg-deps [config.pre-commit.settings.package])
+        (ro-bind config.pre-commit.settings.configPath config.pre-commit.settings.configFile)
+      ];
+
+    pre-commit.settings = {
       hooks = {
         # Formatting
         treefmt = {
@@ -41,10 +48,5 @@
         };
       };
     };
-
-    jail.additionalCombinators = cs:
-      with cs; [
-        (add-pkg-deps [pkgs.pre-commit])
-      ];
   };
 }
