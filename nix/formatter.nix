@@ -31,6 +31,8 @@
         ruff-format.enable = true;
         # Shell
         shfmt.enable = true;
+        # YAML
+        yamlfmt.enable = true;
       };
       settings.formatter = {
         prettier.includes = lib.mkForce ["*.json" "*.md"];
