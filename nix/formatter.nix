@@ -20,22 +20,18 @@
     treefmt = {
       projectRootFile = "flake.nix";
       programs = {
-        # Json and Markdown
+        # Markdown
         prettier = {
           enable = true;
           settings.proseWrap = "always";
         };
         # Nix
         alejandra.enable = true;
-        # Python
-        ruff-format.enable = true;
-        # Shell
-        shfmt.enable = true;
         # YAML
         yamlfmt.enable = true;
       };
       settings.formatter = {
-        prettier.includes = lib.mkForce ["*.json" "*.md"];
+        prettier.includes = lib.mkForce ["*.md"];
       };
     };
   };
